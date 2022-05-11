@@ -91,26 +91,28 @@ def train(
         test_split_ratio
     )
     with mlflow.start_run():
-
         if feature_engineering == "standard_scaler":
             features_train = StandardScaler().fit_transform(features_train)
         elif feature_engineering == "min_max_scaler":
             features_train = MinMaxScaler().fit_transform(features_train)
-
         cv = KFold(n_splits=8, shuffle=True, random_state=random_state)
 
         if search == "KFold":
+
             model = LogisticRegression(
-                random_state=random_state, max_iter=max_iter, C=logreg_c, n_jobs=-1)
+                random_state=random_state, max_iter=max_iter, C=logreg_c, n_jobs=-1
+            )
+
             scores = cross_validate(
                 model,
                 features_train,
                 target_train,
                 cv=cv,
-                scoring=("accuracy", "roc_auc_ovr"),
+                scoring=("accuracy", "roc_auc_ovr", "f1_macro"),
             )
             accuracy = scores["test_accuracy"].mean()
             roc_auc_ovr = scores["test_roc_auc_ovr"].mean()
+            f1_macro = scores["test_f1_macro"].mean()
 
 
             mlflow.log_param("max_iter", max_iter)
@@ -129,17 +131,17 @@ def train(
                 features_train,
                 target_train,
                 cv=cv_outer,
-                scoring=("accuracy", "roc_auc_ovr"),
+                scoring=("accuracy", "roc_auc_ovr", "f1_macro"),
             )
             accuracy = scores["test_accuracy"].mean()
             roc_auc_ovr = scores["test_roc_auc_ovr"].mean()
+            f1_macro = scores["test_f1_macro"].mean()
 
             search_q.fit(features_train, target_train)
             print(
                 "The parameters combination that would give best accuracy is : ",
                 search_q.best_params_,
             )
-
             mlflow.log_param("max_iter", search_q.best_params_["max_iter"])
             mlflow.log_param("logreg_c", search_q.best_params_["C"])
 
@@ -148,8 +150,10 @@ def train(
         mlflow.log_param("search", search)
         mlflow.log_metric("accuracy", accuracy)
         mlflow.log_metric("roc_auc_ovr", roc_auc_ovr)
-        click.echo(f"Accuracy: {accuracy}.")
+        mlflow.log_metric("f1_macro", f1_macro)
+        click.echo(f"accuracy: {accuracy}.")
         click.echo(f"roc_auc_ovr: {roc_auc_ovr}.")
+        click.echo(f"f1_macro: {f1_macro}.")
         click.echo(f"select_model: {select_model}.")
         dump(model, save_model_path)
         click.echo(f"Model is saved to {save_model_path}.")
