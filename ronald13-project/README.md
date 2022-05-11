@@ -35,6 +35,19 @@ Install all requirements (including dev requirements) to poetry environment:
 ```
 poetry install
 ```
+Run [black](https://github.com/psf/black)
+```sh
+python -m black <PATH>
+```
+Run flake8 
+```sh
+python -m flake8 <PATH>
+```
+Run mypy 
+```sh
+python -m mypy <PATH>
+```
+
 #### LogisticRegression - Result
 
 ![img_1.png](img_1.png)
@@ -49,7 +62,12 @@ poetry install
 
 ![img_3.png](img_3.png)
 
-#### Flake8 - Result
+#### Flake8 - Before
 ![img_4.png](img_4.png)
 
+#### Flake8 - After
 ![img_5.png](img_5.png)
+
+
+#### Mypy - Result - almost successful
+![img_6.png](img_6.png)
