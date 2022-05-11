@@ -2,7 +2,7 @@
 name = "ml_project"
 version = "0.1.0"
 description = ""
-authors = ["Aliaksandr Ihnatsiuk <a.ihnatsiuk@digital-science.com>"]
+authors = ["Aliaksandr Ihnatsiuk"]
 
 [tool.poetry.dependencies]
 python = "^3.8"
