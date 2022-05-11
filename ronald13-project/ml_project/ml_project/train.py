@@ -5,6 +5,12 @@ import mlflow
 import mlflow.sklearn
 from sklearn.metrics import accuracy_score
 from .data import get_dataset
+from sklearn.model_selection import KFold
+from sklearn.preprocessing import StandardScaler
+from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import GridSearchCV
+from sklearn.preprocessing import MinMaxScaler
+from sklearn.model_selection import cross_validate
 
 
 @click.command()
@@ -46,12 +52,7 @@ from .data import get_dataset
     type=click.FloatRange(0, 1, min_open=True, max_open=True),
     show_default=True,
 )
-@click.option(
-    "--use-scaler",
-    default=True,
-    type=bool,
-    show_default=True,
-)
+
 @click.option(
     "--max-iter",
     default=500,
@@ -64,30 +65,14 @@ from .data import get_dataset
     type=float,
     show_default=True,
 )
+
 @click.option(
-    "--n-estimators",
-    default=100,
-    type=int,
+    "--feature-engineering",
+    default="standard_scaler",
+    type=click.Choice(["standard_scaler", "min_max_scaler", "None"]),
     show_default=True,
 )
-@click.option(
-    "--max-depth",
-    default=None,
-    type=int,
-    show_default=True,
-)
-@click.option(
-    "--max-features",
-    default=1,
-    type=click.FloatRange(0, 1, min_open=True, max_open=False),
-    show_default=True,
-)
-from sklearn.model_selection import KFold
-from sklearn.preprocessing import StandardScaler
-from sklearn.linear_model import LogisticRegression
-from sklearn.model_selection import GridSearchCV
-from sklearn.preprocessing import MinMaxScaler
-from sklearn.model_selection import cross_validate
+
 def train(
     dataset_path: Path,
     save_model_path: Path,
@@ -111,6 +96,7 @@ def train(
             features_train = StandardScaler().fit_transform(features_train)
         elif feature_engineering == "min_max_scaler":
             features_train = MinMaxScaler().fit_transform(features_train)
+
         cv = KFold(n_splits=8, shuffle=True, random_state=random_state)
 
         if search == "KFold":
