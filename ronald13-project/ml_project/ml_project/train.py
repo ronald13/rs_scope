@@ -62,7 +62,7 @@ from sklearn.ensemble import RandomForestClassifier
 )
 @click.option(
     "--logreg-c",
-    default=10,
+    default=0.1,
     type=float,
     show_default=True,
 )
@@ -76,19 +76,19 @@ from sklearn.ensemble import RandomForestClassifier
 
 @click.option(
     "--n-estimators",
-    default=20,
+    default=100,
     type=int,
     show_default=True,
 )
 @click.option(
     "--max-depth",
-    default=None,
+    default=10,
     type=int,
     show_default=True,
 )
 @click.option(
     "--max-features",
-    default=1,
+    default=0.7,
     type=click.FloatRange(0, 1, min_open=True, max_open=False),
     show_default=True,
 )
@@ -126,7 +126,7 @@ def train(
                 model = LogisticRegression(
                     random_state=random_state, max_iter=max_iter, C=logreg_c, n_jobs=-1
                 )
-            if select_model == "random_forest":
+            elif select_model == "random_forest":
                 model = RandomForestClassifier(
                     random_state=random_state,
                     max_depth=max_depth,
@@ -146,15 +146,26 @@ def train(
             roc_auc_ovr = scores["test_roc_auc_ovr"].mean()
             f1_macro = scores["test_f1_macro"].mean()
 
-
-            mlflow.log_param("max_iter", max_iter)
-            mlflow.log_param("logreg_c", logreg_c)
+            if select_model == "logist_regression":
+                mlflow.log_param("max_iter", max_iter)
+                mlflow.log_param("logreg_c", logreg_c)
+            elif select_model == "random_forest":
+                mlflow.log_param("max_depth", max_depth)
+                mlflow.log_param("max_features", max_features)
+                mlflow.log_param("n_estimators", n_estimators)
 
         elif search == "NestedCV":
-            model = LogisticRegression(random_state=random_state, n_jobs=-1)
-            space = dict()
-            space["max_iter"] = [10, 100, 200, 400, 500, 700]
-            space["C"] = [0.001, 0.01, 0.1, 1, 10]
+            if select_model == "logist_regression":
+                model = LogisticRegression(random_state=random_state, n_jobs=-1)
+                space = dict()
+                space["max_iter"] = [10, 100, 200, 400, 500, 700]
+                space["C"] = [0.001, 0.01, 0.1, 1, 10]
+            elif select_model == "random_forest":
+                model = RandomForestClassifier(random_state=random_state, n_jobs=-1)
+                space = dict()
+                space["max_depth"] = [None, 5, 10, 50, 70]
+                space["max_features"] = [0.2, 0.4, 0.7, 1.0]
+                space["n_estimators"] = [20, 50, 100, 200]
 
             search_q = GridSearchCV(model, space, scoring="accuracy", n_jobs=-1, cv=cv)
             cv_outer = KFold(n_splits=5)
@@ -171,11 +182,16 @@ def train(
 
             search_q.fit(features_train, target_train)
             print(
-                "The parameters combination that would give best accuracy is : ",
+                "The B parameters combination that would give best accuracy is : ",
                 search_q.best_params_,
             )
-            mlflow.log_param("max_iter", search_q.best_params_["max_iter"])
-            mlflow.log_param("logreg_c", search_q.best_params_["C"])
+            if select_model == "logist_regression":
+                mlflow.log_param("max_iter", search_q.best_params_["max_iter"])
+                mlflow.log_param("logreg_c", search_q.best_params_["C"])
+            elif select_model == "random_forest":
+                mlflow.log_param("max_depth", search_q.best_params_["max_depth"])
+                mlflow.log_param("max_features", search_q.best_params_["max_features"])
+                mlflow.log_param("n_estimators", search_q.best_params_["n_estimators"])
 
         mlflow.log_param("feature_engineering", feature_engineering)
         mlflow.log_param("select_model", select_model)
