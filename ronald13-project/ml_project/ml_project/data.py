@@ -1,11 +1,7 @@
-import logging
 from pathlib import Path
 from typing import Tuple
-
 import click
 import pandas as pd
-from sklearn.model_selection import train_test_split
-
 
 def get_dataset(
         csv_path: Path, random_state: int, test_split_ratio: float
@@ -14,5 +10,4 @@ def get_dataset(
     click.echo(f"Dataset shape: {dataset.shape}.")
     target_train = dataset["Cover_Type"]
     features_train = dataset.drop("Cover_Type", axis=1)
-
     return features_train, target_train
