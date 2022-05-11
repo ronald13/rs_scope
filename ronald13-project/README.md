@@ -39,6 +39,9 @@ poetry install
 
 ![img_1.png](img_1.png)
 
+#### RandomForest - Result
+![img.png](img.png)
 
 
-
+#### Combine - Result
+![img_2.png](img_2.png)
