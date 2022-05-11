@@ -42,10 +42,14 @@ poetry install
 #### RandomForest - Result
 ![img.png](img.png)
 
-
 #### Combine - Result
 ![img_2.png](img_2.png)
 
 #### Black - Result
 
 ![img_3.png](img_3.png)
+
+#### Flake8 - Result
+![img_4.png](img_4.png)
+
+![img_5.png](img_5.png)
