@@ -68,6 +68,5 @@ python -m mypy <PATH>
 #### Flake8 - After
 ![img_5.png](img_5.png)
 
-
 #### Mypy - Result - almost successful
 ![img_6.png](img_6.png)
