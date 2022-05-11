@@ -3,7 +3,6 @@ from joblib import dump
 import click
 import mlflow
 import mlflow.sklearn
-from sklearn.metrics import accuracy_score
 from .data import get_dataset
 from sklearn.model_selection import KFold
 from sklearn.preprocessing import StandardScaler
