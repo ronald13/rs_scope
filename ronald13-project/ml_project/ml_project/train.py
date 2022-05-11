@@ -53,7 +53,6 @@ from sklearn.ensemble import RandomForestClassifier
     type=click.FloatRange(0, 1, min_open=True, max_open=True),
     show_default=True,
 )
-
 @click.option(
     "--max-iter",
     default=500,
@@ -66,14 +65,12 @@ from sklearn.ensemble import RandomForestClassifier
     type=float,
     show_default=True,
 )
-
 @click.option(
     "--feature-engineering",
     default="standard_scaler",
     type=click.Choice(["standard_scaler", "min_max_scaler", "None"]),
     show_default=True,
 )
-
 @click.option(
     "--n-estimators",
     default=100,
@@ -92,7 +89,6 @@ from sklearn.ensemble import RandomForestClassifier
     type=click.FloatRange(0, 1, min_open=True, max_open=False),
     show_default=True,
 )
-
 def train(
     dataset_path: Path,
     save_model_path: Path,
@@ -106,12 +102,9 @@ def train(
     n_estimators: int,
     max_depth: int,
     max_features: float,
-
 ) -> None:
     features_train, target_train = get_dataset(
-        dataset_path,
-        random_state,
-        test_split_ratio
+        dataset_path, random_state, test_split_ratio
     )
     with mlflow.start_run():
         if feature_engineering == "standard_scaler":
