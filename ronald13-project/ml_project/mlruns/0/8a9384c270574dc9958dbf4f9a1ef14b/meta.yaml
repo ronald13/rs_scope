@@ -1,0 +1,15 @@
+artifact_uri: file:///home/user/PycharmProjects/rs_scope/ronald13-project/ml_project/mlruns/0/8a9384c270574dc9958dbf4f9a1ef14b/artifacts
+end_time: 1652266681992
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: deleted
+name: ''
+run_id: 8a9384c270574dc9958dbf4f9a1ef14b
+run_uuid: 8a9384c270574dc9958dbf4f9a1ef14b
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1652266666578
+status: 4
+tags: []
+user_id: user
