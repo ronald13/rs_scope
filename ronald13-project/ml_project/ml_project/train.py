@@ -107,6 +107,10 @@ def train(
     )
     with mlflow.start_run():
 
+        if feature_engineering == "standard_scaler":
+            features_train = StandardScaler().fit_transform(features_train)
+        elif feature_engineering == "min_max_scaler":
+            features_train = MinMaxScaler().fit_transform(features_train)
         cv = KFold(n_splits=8, shuffle=True, random_state=random_state)
 
         if search == "KFold":
