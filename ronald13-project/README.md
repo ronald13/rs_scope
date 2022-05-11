@@ -45,3 +45,7 @@ poetry install
 
 #### Combine - Result
 ![img_2.png](img_2.png)
+
+#### Black - Result
+
+![img_3.png](img_3.png)
